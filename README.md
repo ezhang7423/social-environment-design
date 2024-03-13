@@ -1,4 +1,4 @@
-# sen
+# sen - social environment design
 
 ## Installation
 
