@@ -1,4 +1,7 @@
+from typing import Collection
+
 import numpy as np
+from dm_env import TimeStep
 
 
 class Principal:

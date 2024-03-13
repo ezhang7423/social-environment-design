@@ -1,0 +1,3 @@
+[submodule "submodules/meltingpot"]
+	path = submodules/meltingpot
+	url = git@github.com:Founding-Zero/meltingpot.git

@@ -6,11 +6,21 @@ readme = "README.md"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-eztils = "^0.4.80"
-python = "^3.11"
+dm-meltingpot = {path = "submodules/meltingpot", develop = true}
+eztils = "^0.4.91"
+gymnasium = "^0.29.1"
+jax = "0.4.23"
+pettingzoo = "^1.24.3"
+python = "^3.11,<3.12"
 python-dotenv = "^1.0.0"
+supersuit = "^3.9.2"
+torchvision = "^0.17.1"
 typer-config = "^1.4.0"
 wandb = "^0.16.2"
+jaxlib = "0.4.23"
+huggingface-hub = "^0.21.4"
+matplotlib = "^3.8.3"
+stable-baselines3 = "^2.2.1"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

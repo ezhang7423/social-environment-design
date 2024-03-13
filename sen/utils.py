@@ -16,9 +16,9 @@
 import functools
 
 import matplotlib.pyplot as plt
-from examples.gym import utils
 from gymnasium import utils as gym_utils
 from meltingpot import substrate
+from meltingpot.examples.gym import utils
 from ml_collections import config_dict
 from pettingzoo import utils as pettingzoo_utils
 from pettingzoo.utils import wrappers

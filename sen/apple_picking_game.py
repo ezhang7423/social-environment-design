@@ -18,10 +18,10 @@ from meltingpot import substrate
 from torch.distributions.categorical import Categorical
 from torch.utils.tensorboard import SummaryWriter
 
-from . import huggingface_upload, utils
-from .principal import Principal
-from .principal_utils import vote
-from .vector_constructors import pettingzoo_env_to_vec_env_v1, sb3_concat_vec_envs_v1
+from sen import huggingface_upload, utils
+from sen.principal import Principal
+from sen.principal_utils import vote
+from sen.vector_constructors import pettingzoo_env_to_vec_env_v1, sb3_concat_vec_envs_v1
 
 
 def parse_args():
@@ -555,7 +555,8 @@ if __name__ == "__main__":
                 for player_id in range(num_agents):
                     env_id = player_id + game_id * num_agents
                     w = selfishness[player_id]
-                    nearby_reward = sum(nearby[env_id] * game_reward)
+                    #! TODO fix nearby_reward = sum(nearby[env_id] * game_reward)
+                    nearby_reward = 0
                     intrinsic_reward[env_id] = (
                         w * extrinsic_reward[env_id] + (1 - w) * nearby_reward
                     )

@@ -159,3 +159,29 @@ def build_substrate(
     # reward (sum of all players' rewards).
     env = collective_reward_wrapper.CollectiveRewardWrapper(env)
     return PrincipalSubstrate(env, principal)
+
+
+from collections.abc import Collection, Mapping, Sequence, Set
+
+from meltingpot.utils.substrates.substrate_factory import SubstrateFactory
+
+
+class PrincipalSubstrateFactory(SubstrateFactory):
+    def build_principal(
+        self, roles: Sequence[str], principal: Principal
+    ) -> PrincipalSubstrate:
+        """Builds the substrate.
+
+        Args:
+        roles: the role each player will take.
+
+        Returns:
+        The constructed substrate.
+        """
+        return build_substrate(
+            lab2d_settings=self._lab2d_settings_builder(roles),
+            individual_observations=self._individual_observations,
+            global_observations=self._global_observations,
+            action_table=self._action_table,
+            principal=principal,
+        )
