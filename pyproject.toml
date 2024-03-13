@@ -1,7 +1,7 @@
 [tool.poetry]
 authors = ["ezhang7423 <ezhang@g.harvard.edu>"]
 description = ""
-name = "sed"
+name = "sen"
 readme = "README.md"
 version = "0.1.0"
 
@@ -18,7 +18,7 @@ requires = ["poetry-core"]
 
 [tool.poetry.scripts]
 # Entry points for the package https://python-poetry.org/docs/pyproject/#scripts
-"sed" = "sed.__main__:app"
+"sen" = "sen.__main__:app"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
@@ -91,14 +91,14 @@ warn_no_return = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
-warn_unused_configs = true
-warn_unused_ignores = true
+warn_unusen_configs = true
+warn_unusen_ignores = true
 
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/6.2.x/customize.html#pyproject-toml
 # Directories that are not visited by pytest collector:
 doctest_optionflags = ["NUMBER", "NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
-norecursedirs = ["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__"]
+norecursenirs = ["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__"]
 
 # Extra options:
 addopts = [

@@ -5,16 +5,16 @@ import typer
 from rich import print
 from typer_config.decorators import dump_json_config, use_json_config
 
-from sed import setup_experiment
+from sen import setup_experiment
 
 setup_experiment()
 from eztils import datestr
 from eztils.typer import dataclass_option
 
-from sed import LOG_DIR, version
+from sen import LOG_DIR, version
 
 app = typer.Typer(
-    name="sed",
+    name="sen",
     help="project_tag",
     add_completion=False,
 )
@@ -39,13 +39,13 @@ class Config:
 @use_json_config()
 @dump_json_config(str(LOG_DIR / "config.json"))
 def main(
-    conf: dataclass_option(Config) = "{}",  # type: ignore,
+    conf: dataclass_option(Config) = "{}",  # type: ignore
     wandb: bool = False,
 ) -> None:
     """Print a greeting with a giving name."""
     conf: Config = conf  # for type hinting
 
-    print(f"[bold green]Welcome to sed v{version}[/]")
+    print(f"[bold green]Welcome to sen v{version}[/]")
     print(f"config {type(conf)}: {conf}")
     if wandb:
         import wandb as wb

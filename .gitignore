@@ -1,4 +1,4 @@
-sed/.env
+sen/.env
 runs
 
 # Created by https://www.gitignore.io/api/osx,python,pycharm,windows,visualstudio,visualstudiocode
@@ -75,7 +75,7 @@ cmake-build-*/
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
-# File-based project format
+# File-basen project format
 *.iws
 
 # IntelliJ
@@ -96,7 +96,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# Editor-based Rest Client
+# Editor-basen Rest Client
 .idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
@@ -202,7 +202,7 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
-# SageMath parsed files
+# SageMath parsen files
 *.sage.py
 
 # Spyder project settings
@@ -254,7 +254,7 @@ ehthumbs_vista.db
 # Folder config file
 [Dd]esktop.ini
 
-# Recycle Bin used on file shares
+# Recycle Bin usen on file shares
 $RECYCLE.BIN/
 
 # Windows Installer files
@@ -459,7 +459,7 @@ PublishScripts/
 *.snupkg
 # The packages folder can be ignored because of Package Restore
 **/[Pp]ackages/*
-# except build/, which is used as an MSBuild target.
+# except build/, which is usen as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/[Pp]ackages/repositories.config

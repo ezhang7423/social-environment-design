@@ -22,15 +22,16 @@ install:
 		$(CONDA) create -n py311 python=3.11 -y
 	fi
 
-	$(CONDA_ACTIVATE) py311
 
-	# type python
+	$(CONDA_ACTIVATE) py311
+	$(CONDA) deactivate
+
 	# if [[ ! -d "$(PWD)venv" ]]; then
 	# 	python -m venv venv
 	# fi
 	# source venv/bin/activate
-	# type python
 
+	type python
 	export POETRY_VIRTUALENVS_IN_PROJECT=1
 	export POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON=1
 
