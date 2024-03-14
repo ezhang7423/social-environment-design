@@ -105,9 +105,7 @@ def parse_args():
         default=2.5e-4,
         help="the learning rate of the optimizer",
     )
-    parser.add_argument(
-        "--adam-eps", type=float, default=1e-5, help="eps value for the optimizer"
-    )
+    parser.add_argument("--adam-eps", type=float, default=1e-5, help="eps value for the optimizer")
     parser.add_argument(
         "--num-parallel-games",
         type=int,
@@ -166,9 +164,7 @@ def parse_args():
         const=True,
         help="Toggle learning rate annealing for policy and value networks",
     )
-    parser.add_argument(
-        "--gamma", type=float, default=0.99, help="the discount factor gamma"
-    )
+    parser.add_argument("--gamma", type=float, default=0.99, help="the discount factor gamma")
     parser.add_argument(
         "--gae-lambda",
         type=float,
@@ -206,9 +202,7 @@ def parse_args():
         const=True,
         help="Toggles whether or not to use a clipped loss for the value function, as per the paper.",
     )
-    parser.add_argument(
-        "--ent-coef", type=float, default=0.01, help="coefficient of the entropy"
-    )
+    parser.add_argument("--ent-coef", type=float, default=0.01, help="coefficient of the entropy")
     parser.add_argument(
         "--vf-coef", type=float, default=0.5, help="coefficient of the value function"
     )
@@ -232,9 +226,7 @@ class Agent(nn.Module):
     def __init__(self, envs):
         super().__init__()
         self.network = nn.Sequential(
-            self.layer_init(
-                nn.Conv2d(envs.single_observation_space.shape[2], 32, 8, stride=4)
-            ),
+            self.layer_init(nn.Conv2d(envs.single_observation_space.shape[2], 32, 8, stride=4)),
             nn.ReLU(),
             self.layer_init(nn.Conv2d(32, 64, 4, stride=2)),
             nn.ReLU(),
@@ -244,9 +236,7 @@ class Agent(nn.Module):
             self.layer_init(nn.Linear(64 * 7 * 7, 512)),
             nn.ReLU(),
         )
-        self.actor = self.layer_init(
-            nn.Linear(512, envs.single_action_space.n), std=0.01
-        )
+        self.actor = self.layer_init(nn.Linear(512, envs.single_action_space.n), std=0.01)
         self.critic = self.layer_init(nn.Linear(512, 1), std=1)
 
     def get_value(self, x):
@@ -317,9 +307,7 @@ class PrincipalAgent(nn.Module):
         probs2 = Categorical(logits=logits2)
         probs3 = Categorical(logits=logits3)
         if action is None:
-            action = torch.stack(
-                [probs1.sample(), probs2.sample(), probs3.sample()], dim=1
-            )
+            action = torch.stack([probs1.sample(), probs2.sample(), probs3.sample()], dim=1)
         log_prob = (
             probs1.log_prob(action[:, 0])
             + probs2.log_prob(action[:, 1])
@@ -399,17 +387,15 @@ if __name__ == "__main__":
     agent = Agent(envs).to(device)
     principal_agent = PrincipalAgent(num_agents).to(device)
     optimizer = optim.Adam(agent.parameters(), lr=args.learning_rate, eps=args.adam_eps)
-    principal_optimizer = optim.Adam(
-        agent.parameters(), lr=args.learning_rate, eps=args.adam_eps
-    )
+    principal_optimizer = optim.Adam(agent.parameters(), lr=args.learning_rate, eps=args.adam_eps)
 
     # ALGO Logic: Storage setup
-    obs = torch.zeros(
-        (args.sampling_horizon, num_envs) + envs.single_observation_space.shape
-    ).to(device)
-    actions = torch.zeros(
-        (args.sampling_horizon, num_envs) + envs.single_action_space.shape
-    ).to(device)
+    obs = torch.zeros((args.sampling_horizon, num_envs) + envs.single_observation_space.shape).to(
+        device
+    )
+    actions = torch.zeros((args.sampling_horizon, num_envs) + envs.single_action_space.shape).to(
+        device
+    )
     logprobs = torch.zeros((args.sampling_horizon, num_envs)).to(device)
     rewards = torch.zeros((args.sampling_horizon, num_envs)).to(device)
     dones = torch.zeros((args.sampling_horizon, num_envs)).to(device)
@@ -421,21 +407,11 @@ if __name__ == "__main__":
     cumulative_rewards = torch.zeros(
         (args.sampling_horizon, args.num_parallel_games, num_agents)
     ).to(device)
-    principal_actions = torch.zeros(
-        (args.sampling_horizon, args.num_parallel_games, 3)
-    ).to(device)
-    principal_logprobs = torch.zeros(
-        (args.sampling_horizon, args.num_parallel_games)
-    ).to(device)
-    principal_rewards = torch.zeros(
-        (args.sampling_horizon, args.num_parallel_games)
-    ).to(device)
-    principal_dones = torch.zeros((args.sampling_horizon, args.num_parallel_games)).to(
-        device
-    )
-    principal_values = torch.zeros((args.sampling_horizon, args.num_parallel_games)).to(
-        device
-    )
+    principal_actions = torch.zeros((args.sampling_horizon, args.num_parallel_games, 3)).to(device)
+    principal_logprobs = torch.zeros((args.sampling_horizon, args.num_parallel_games)).to(device)
+    principal_rewards = torch.zeros((args.sampling_horizon, args.num_parallel_games)).to(device)
+    principal_dones = torch.zeros((args.sampling_horizon, args.num_parallel_games)).to(device)
+    principal_values = torch.zeros((args.sampling_horizon, args.num_parallel_games)).to(device)
 
     next_obs = torch.Tensor(envs.reset()).to(device)
     next_done = torch.zeros(num_envs).to(device)
@@ -478,8 +454,7 @@ if __name__ == "__main__":
         # annealing tax controlling multiplier
         if args.anneal_tax:
             tax_frac = 0.1 + 0.9 * min(
-                (current_episode - 1.0)
-                / (args.num_episodes * args.tax_annealment_proportion),
+                (current_episode - 1.0) / (args.num_episodes * args.tax_annealment_proportion),
                 1,
             )
 
@@ -510,9 +485,7 @@ if __name__ == "__main__":
                     principal_logprob,
                     _,
                     principal_value,
-                ) = principal_agent.get_action_and_value(
-                    principal_next_obs, next_cumulative_reward
-                )
+                ) = principal_agent.get_action_and_value(principal_next_obs, next_cumulative_reward)
                 principal_values[step] = principal_value.flatten()
 
             if episode_step % args.tax_period == 0:
@@ -545,13 +518,9 @@ if __name__ == "__main__":
 
             # mix personal and nearby rewards
             intrinsic_reward = np.zeros_like(extrinsic_reward)
-            nearby = torch.stack(
-                [torch.Tensor(info[i][2]) for i in range(0, num_envs)]
-            ).to(device)
+            nearby = torch.stack([torch.Tensor(info[i][2]) for i in range(0, num_envs)]).to(device)
             for game_id in range(args.num_parallel_games):
-                game_reward = extrinsic_reward[
-                    game_id * num_agents : (game_id + 1) * num_agents
-                ]
+                game_reward = extrinsic_reward[game_id * num_agents : (game_id + 1) * num_agents]
                 for player_id in range(num_agents):
                     env_id = player_id + game_id * num_agents
                     w = selfishness[player_id]
@@ -571,9 +540,7 @@ if __name__ == "__main__":
             for env_id in range(len(reward)):
                 player_id = env_id % num_agents
                 v = trust[player_id]
-                reward[env_id] = (
-                    v * extrinsic_reward[env_id] + (1 - v) * intrinsic_reward[env_id]
-                )
+                reward[env_id] = v * extrinsic_reward[env_id] + (1 - v) * intrinsic_reward[env_id]
 
             principal_next_obs = torch.stack(
                 [torch.Tensor(info[i][1]) for i in range(0, num_envs, num_agents)]
@@ -597,9 +564,7 @@ if __name__ == "__main__":
             next_cumulative_reward = next_cumulative_reward.to(device)
             cumulative_rewards[step] = next_cumulative_reward.to(device)
             rewards[step] = torch.tensor(reward).to(device).view(-1)
-            next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(
-                done
-            ).to(device)
+            next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(done).to(device)
 
             principal_rewards[step] = torch.tensor(principal_reward).to(device).view(-1)
 
@@ -609,9 +574,7 @@ if __name__ == "__main__":
         episode_rewards += torch.sum(rewards, 0)
         end_step = episode_step - 1
 
-        episode_world_obs[num_updates_for_this_ep - 1] = principal_obs[
-            :, 0, :, :, :
-        ].clone()
+        episode_world_obs[num_updates_for_this_ep - 1] = principal_obs[:, 0, :, :, :].clone()
         if args.save_model and current_episode % args.save_model_freq == 0:
             try:
                 os.mkdir(f"./saved_params_{run_name}")
@@ -658,9 +621,7 @@ if __name__ == "__main__":
                 else:
                     nextnonterminal = 1.0 - dones[t + 1]
                     nextvalues = values[t + 1]
-                delta = (
-                    rewards[t] + args.gamma * nextvalues * nextnonterminal - values[t]
-                )
+                delta = rewards[t] + args.gamma * nextvalues * nextnonterminal - values[t]
                 advantages[t] = lastgaelam = (
                     delta + args.gamma * args.gae_lambda * nextnonterminal * lastgaelam
                 )
@@ -720,9 +681,7 @@ if __name__ == "__main__":
                     # calculate approx_kl http://joschu.net/blog/kl-approx.html
                     old_approx_kl = (-logratio).mean()
                     approx_kl = ((ratio - 1) - logratio).mean()
-                    clipfracs += [
-                        ((ratio - 1.0).abs() > args.clip_coef).float().mean().item()
-                    ]
+                    clipfracs += [((ratio - 1.0).abs() > args.clip_coef).float().mean().item()]
 
                 mb_advantages = b_advantages[mb_inds]
                 if args.norm_adv:
@@ -796,22 +755,15 @@ if __name__ == "__main__":
                     b_cumulative_rewards[mb_inds],
                     principal_b_actions.long()[mb_inds],
                 )
-                principal_logratio = (
-                    principal_newlogprob - principal_b_logprobs[mb_inds]
-                )
+                principal_logratio = principal_newlogprob - principal_b_logprobs[mb_inds]
                 principal_ratio = principal_logratio.exp()
 
                 with torch.no_grad():
                     # calculate approx_kl http://joschu.net/blog/kl-approx.html
                     principal_old_approx_kl = (-principal_logratio).mean()
-                    principal_approx_kl = (
-                        (principal_ratio - 1) - principal_logratio
-                    ).mean()
+                    principal_approx_kl = ((principal_ratio - 1) - principal_logratio).mean()
                     principal_clipfracs += [
-                        ((principal_ratio - 1.0).abs() > args.clip_coef)
-                        .float()
-                        .mean()
-                        .item()
+                        ((principal_ratio - 1.0).abs() > args.clip_coef).float().mean().item()
                     ]
 
                 principal_mb_advantages = principal_b_advantages[mb_inds]
@@ -825,9 +777,7 @@ if __name__ == "__main__":
                 principal_pg_loss2 = -principal_mb_advantages * torch.clamp(
                     principal_ratio, 1 - args.clip_coef, 1 + args.clip_coef
                 )
-                principal_pg_loss = torch.max(
-                    principal_pg_loss1, principal_pg_loss2
-                ).mean()
+                principal_pg_loss = torch.max(principal_pg_loss1, principal_pg_loss2).mean()
 
                 # Value loss
                 principal_newvalue = principal_newvalue.view(-1)
@@ -849,10 +799,7 @@ if __name__ == "__main__":
                     principal_v_loss = 0.5 * principal_v_loss_max.mean()
                 else:
                     principal_v_loss = (
-                        0.5
-                        * (
-                            (principal_newvalue - principal_b_returns[mb_inds]) ** 2
-                        ).mean()
+                        0.5 * ((principal_newvalue - principal_b_returns[mb_inds]) ** 2).mean()
                     )
 
                 principal_entropy_loss = principal_entropy.mean()
@@ -864,9 +811,7 @@ if __name__ == "__main__":
 
                 principal_optimizer.zero_grad()
                 principal_loss.backward()
-                nn.utils.clip_grad_norm_(
-                    principal_agent.parameters(), args.max_grad_norm
-                )
+                nn.utils.clip_grad_norm_(principal_agent.parameters(), args.max_grad_norm)
                 principal_optimizer.step()
 
         y_pred, y_true = b_values.cpu().numpy(), b_returns.cpu().numpy()
@@ -907,11 +852,7 @@ if __name__ == "__main__":
                 huggingface_upload.upload(f"./videos_{run_name}", run_name)
                 if args.track:
                     wandb.log(
-                        {
-                            "video": wandb.Video(
-                                f"./videos_{run_name}/episode_{current_episode}.mp4"
-                            )
-                        }
+                        {"video": wandb.Video(f"./videos_{run_name}/episode_{current_episode}.mp4")}
                     )
                 os.remove(f"./videos_{run_name}/episode_{current_episode}.mp4")
 
@@ -921,14 +862,10 @@ if __name__ == "__main__":
             writer.add_scalar("losses/value_loss", v_loss.item(), current_episode)
             writer.add_scalar("losses/policy_loss", pg_loss.item(), current_episode)
             writer.add_scalar("losses/entropy", entropy_loss.item(), current_episode)
-            writer.add_scalar(
-                "losses/old_approx_kl", old_approx_kl.item(), current_episode
-            )
+            writer.add_scalar("losses/old_approx_kl", old_approx_kl.item(), current_episode)
             writer.add_scalar("losses/approx_kl", approx_kl.item(), current_episode)
             writer.add_scalar("losses/clipfrac", np.mean(clipfracs), current_episode)
-            writer.add_scalar(
-                "losses/explained_variance", explained_var, current_episode
-            )
+            writer.add_scalar("losses/explained_variance", explained_var, current_episode)
             writer.add_scalar(
                 "charts/mean_episodic_return",
                 torch.mean(episode_rewards),
@@ -936,13 +873,9 @@ if __name__ == "__main__":
             )
             writer.add_scalar("charts/episode", current_episode, current_episode)
             writer.add_scalar("charts/tax_frac", tax_frac, current_episode)
-            mean_rewards_across_envs = {
-                player_idx: 0 for player_idx in range(0, num_agents)
-            }
+            mean_rewards_across_envs = {player_idx: 0 for player_idx in range(0, num_agents)}
             for idx in range(len(episode_rewards)):
-                mean_rewards_across_envs[idx % num_agents] += episode_rewards[
-                    idx
-                ].item()
+                mean_rewards_across_envs[idx % num_agents] += episode_rewards[idx].item()
             mean_rewards_across_envs = list(
                 map(
                     lambda x: x / args.num_parallel_games,
@@ -975,9 +908,7 @@ if __name__ == "__main__":
                     for bracket in range(0, 3):
                         writer.add_scalar(
                             f"charts/tax_value_game{game_id}_bracket_{bracket+1}",
-                            np.array(
-                                tax_values[tax_period][f"game_{game_id}"][bracket]
-                            ),
+                            np.array(tax_values[tax_period][f"game_{game_id}"][bracket]),
                             tax_step,
                         )
 

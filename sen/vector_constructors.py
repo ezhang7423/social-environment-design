@@ -54,8 +54,7 @@ class MarkovVectorEnv(gymnasium.vector.VectorEnv):
             for agent in par_env.possible_agents
         ), "observation spaces not consistent. Perhaps you should wrap with `supersuit.multiagent_wrappers.pad_observations_v0`?"
         assert all(
-            self.action_space == par_env.action_space(agent)
-            for agent in par_env.possible_agents
+            self.action_space == par_env.action_space(agent) for agent in par_env.possible_agents
         ), "action spaces not consistent. Perhaps you should wrap with `supersuit.multiagent_wrappers.pad_action_space_v0`?"
         self.num_envs = len(par_env.possible_agents)
         self.black_death = black_death
@@ -203,11 +202,7 @@ class ConcatVecEnv(gymnasium.vector.VectorEnv):
     def concat_obs(self, observations):
         return concatenate(
             self.observation_space,
-            [
-                item
-                for obs in observations
-                for item in iterate(self.observation_space, obs)
-            ],
+            [item for obs in observations for item in iterate(self.observation_space, obs)],
             create_empty_array(self.observation_space, n=self.num_envs),
         )
 
@@ -231,9 +226,7 @@ class ConcatVecEnv(gymnasium.vector.VectorEnv):
         for venv in self.vec_envs:
             data.append(
                 venv.step(
-                    self.concatenate_actions(
-                        actions[idx : idx + venv.num_envs], venv.num_envs
-                    )
+                    self.concatenate_actions(actions[idx : idx + venv.num_envs], venv.num_envs)
                 )
             )
             idx += venv.num_envs
@@ -242,9 +235,7 @@ class ConcatVecEnv(gymnasium.vector.VectorEnv):
         rewards = np.concatenate(rewards, axis=0)
         terminations = np.concatenate(terminations, axis=0)
         truncations = np.concatenate(truncations, axis=0)
-        infos = [
-            info for sublist in infos for info in sublist
-        ]  # flatten infos from nested lists
+        infos = [info for sublist in infos for info in sublist]  # flatten infos from nested lists
         return observations, rewards, terminations, truncations, infos
 
     def render(self):
@@ -255,9 +246,7 @@ class ConcatVecEnv(gymnasium.vector.VectorEnv):
             vec_env.close()
 
     def env_is_wrapped(self, wrapper_class):
-        return sum(
-            [sub_venv.env_is_wrapped(wrapper_class) for sub_venv in self.vec_envs], []
-        )
+        return sum([sub_venv.env_is_wrapped(wrapper_class) for sub_venv in self.vec_envs], [])
 
 
 import gymnasium
@@ -338,9 +327,7 @@ class SB3VecEnvWrapper(VecEnvWrapper):
     def step_wait(self):
         observations, rewards, terminations, truncations, infos = self.venv.step_wait()
         # Note: SB3 expects dones to be an np.array
-        dones = np.array(
-            [terminations[i] or truncations[i] for i in range(len(terminations))]
-        )
+        dones = np.array([terminations[i] or truncations[i] for i in range(len(terminations))])
         return observations, rewards, dones, infos
 
     def env_is_wrapped(self, wrapper_class, indices=None):

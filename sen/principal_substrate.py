@@ -89,9 +89,7 @@ class PrincipalSubstrate(base.Lab2dWrapper):
                 if player_reward != 1:
                     raise Exception("Reward is not 1")
                 # add tax from principal
-                tax = self.principal.calculate_tax(
-                    self.principal.apple_counts[player_idx]
-                )
+                tax = self.principal.calculate_tax(self.principal.apple_counts[player_idx])
                 player_reward -= tax
                 self.principal.collect_tax(tax)
 
@@ -167,9 +165,7 @@ from meltingpot.utils.substrates.substrate_factory import SubstrateFactory
 
 
 class PrincipalSubstrateFactory(SubstrateFactory):
-    def build_principal(
-        self, roles: Sequence[str], principal: Principal
-    ) -> PrincipalSubstrate:
+    def build_principal(self, roles: Sequence[str], principal: Principal) -> PrincipalSubstrate:
         """Builds the substrate.
 
         Args:

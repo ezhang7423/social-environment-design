@@ -9,9 +9,7 @@ class Principal:
         self.set_objective(starting_objective)
         self.num_players = num_players
         self.num_games = num_games
-        self.player_wealths = {
-            f"game_{idx}": [0] * num_players for idx in range(num_games)
-        }
+        self.player_wealths = {f"game_{idx}": [0] * num_players for idx in range(num_games)}
         self.collected_tax = {f"game_{idx}": 0 for idx in range(num_games)}
         self.__tax_brackets = [(1, 10), (11, 20), (21, 10000)]
         self.tax_vals = {f"game_{idx}": [0, 0, 0] for idx in range(num_games)}

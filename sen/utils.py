@@ -32,9 +32,7 @@ def parallel_env(env_config, max_cycles=MAX_CYCLES, principal=None):
 
 
 def raw_env(env_config, max_cycles=MAX_CYCLES):
-    return pettingzoo_utils.parallel_to_aec_wrapper(
-        parallel_env(env_config, max_cycles)
-    )
+    return pettingzoo_utils.parallel_to_aec_wrapper(parallel_env(env_config, max_cycles))
 
 
 def env(env_config, max_cycles=MAX_CYCLES):
@@ -85,12 +83,8 @@ class _MeltingPotPettingZooEnv(pettingzoo_utils.ParallelEnv):
             lambda agent_id: observation_space
         )
         action_space = utils.spec_to_space(self._env.action_spec()[0])
-        self.action_space = functools.lru_cache(maxsize=None)(
-            lambda agent_id: action_space
-        )
-        self.state_space = utils.spec_to_space(
-            self._env.observation_spec()[0]["WORLD.RGB"]
-        )
+        self.action_space = functools.lru_cache(maxsize=None)(lambda agent_id: action_space)
+        self.state_space = utils.spec_to_space(self._env.observation_spec()[0]["WORLD.RGB"])
 
     def state(self):
         return self._env.observation()
@@ -102,17 +96,13 @@ class _MeltingPotPettingZooEnv(pettingzoo_utils.ParallelEnv):
         self.num_cycles = 0
         observations, nearby_obs, world_obs = timestep_to_observations(timestep)
 
-        return observations, {
-            agent: ({}, world_obs, nearby_obs[agent]) for agent in self.agents
-        }
+        return observations, {agent: ({}, world_obs, nearby_obs[agent]) for agent in self.agents}
 
     def step(self, action):
         """See base class."""
         actions = [action[agent] for agent in self.agents]
         timestep = self._env.step(actions)
-        rewards = {
-            agent: timestep.reward[index] for index, agent in enumerate(self.agents)
-        }
+        rewards = {agent: timestep.reward[index] for index, agent in enumerate(self.agents)}
         self.num_cycles += 1
         done = timestep.last() or self.num_cycles >= self.max_cycles
         dones = {agent: done for agent in self.agents}
