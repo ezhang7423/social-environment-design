@@ -1,4 +1,4 @@
-"""project_tag"""
+"""social environment design in tragedy of the commons"""
 
 """ 
 Other global variables

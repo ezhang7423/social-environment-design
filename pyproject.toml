@@ -21,6 +21,7 @@ jaxlib = "0.4.23"
 huggingface-hub = "^0.21.4"
 matplotlib = "^3.8.3"
 stable-baselines3 = "^2.2.1"
+av = "^11.0.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
