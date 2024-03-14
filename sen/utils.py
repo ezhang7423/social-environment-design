@@ -67,7 +67,9 @@ class _MeltingPotPettingZooEnv(pettingzoo_utils.ParallelEnv):
                 self.env_config, roles=self.env_config.default_player_roles
             )
         else:
-            self._env = substrate.build_principal_from_config(
+            from sen.principal.substrate import build_principal_from_config
+
+            self._env = build_principal_from_config(
                 self.env_config,
                 roles=self.env_config.default_player_roles,
                 principal=principal,

@@ -20,6 +20,8 @@ from collections.abc import Collection, Mapping, Sequence
 import chex
 import dm_env
 import reactivex
+from meltingpot.configs import substrates as substrate_configs
+from meltingpot.substrate import get_factory_from_config
 from meltingpot.utils.substrates import builder
 from meltingpot.utils.substrates.wrappers import (
     base,
@@ -29,9 +31,10 @@ from meltingpot.utils.substrates.wrappers import (
     observables,
     observables_wrapper,
 )
+from ml_collections import config_dict
 from reactivex import subject
 
-from .principal import Principal
+from . import Principal
 
 
 @chex.dataclass(frozen=True)
@@ -181,3 +184,44 @@ class PrincipalSubstrateFactory(SubstrateFactory):
             action_table=self._action_table,
             principal=principal,
         )
+
+
+def build_principal_from_config(
+    config: config_dict.ConfigDict, *, roles: Sequence[str], principal: Principal
+) -> PrincipalSubstrate:
+    """Builds a substrate from the provided config.
+
+    Args:
+      config: config resulting from `get_config`.
+      roles: sequence of strings defining each player's role. The length of
+        this sequence determines the number of players.
+      principal: the principal
+
+    Returns:
+      The training substrate.
+    """
+    return get_factory_from_config(config).build_principal(roles, principal)
+
+
+def get_factory(name: str) -> PrincipalSubstrateFactory:
+    """Returns the factory for the specified substrate."""
+    config = substrate_configs.get_config(name)
+    return get_factory_from_config(config)
+
+
+def get_factory_from_config(config: config_dict.ConfigDict) -> PrincipalSubstrateFactory:
+    """Returns a factory from the provided config."""
+
+    def lab2d_settings_builder(roles):
+        return config.lab2d_settings_builder(roles=roles, config=config)
+
+    return PrincipalSubstrateFactory(
+        lab2d_settings_builder=lab2d_settings_builder,
+        individual_observations=config.individual_observation_names,
+        global_observations=config.global_observation_names,
+        action_table=config.action_set,
+        timestep_spec=config.timestep_spec,
+        action_spec=config.action_spec,
+        valid_roles=config.valid_roles,
+        default_player_roles=config.default_player_roles,
+    )
