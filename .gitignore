@@ -1,3 +1,4 @@
+.envrc
 wandb
 sen/.env
 runs
